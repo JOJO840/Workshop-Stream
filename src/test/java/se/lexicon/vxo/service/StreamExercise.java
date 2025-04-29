@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
 import java.util.function.ToIntFunction;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,7 +39,7 @@ public class StreamExercise {
     public void task2() {
         long amount = 0;
 
-        // todo: write your code here
+        amount = people.stream().count();
 
         assertEquals(10000, amount);
     }
@@ -50,8 +51,9 @@ public class StreamExercise {
     public void task3() {
         long amount = 0;
         int expected = 90;
+        amount = people.stream().filter(people -> people.getLastName().equalsIgnoreCase("Andersson")).count();
+        assertEquals(expected, amount);
 
-        // todo: write your code here
 
         assertEquals(expected, amount);
     }
@@ -65,6 +67,8 @@ public class StreamExercise {
         List<Person> females = null;
 
         // todo: write your code here
+        females = people.stream().filter(person -> person.getGender() == Gender.FEMALE)
+                .collect(Collectors.toList());
 
         assertNotNull(females);
         assertEquals(expectedSize, females.size());
@@ -78,8 +82,7 @@ public class StreamExercise {
         int expectedSize = 8882;
         Set<LocalDate> dates = null;
 
-
-        // todo: write your code here
+        dates = people.stream().map(person -> person.getDateOfBirth()).collect(Collectors.toCollection(() -> new TreeSet<>()));
 
 
         assertNotNull(dates);
@@ -97,7 +100,9 @@ public class StreamExercise {
         Person[] result = null;
 
         // todo: write your code here
-
+        result = people.stream()
+                .filter(person -> person.getFirstName().equalsIgnoreCase("erik"))
+                .toArray(Person[]::new);
 
         assertNotNull(result);
         assertEquals(expectedLength, result.length);
@@ -109,12 +114,9 @@ public class StreamExercise {
     @Test
     public void task7() {
         Person expected = new Person(5436, "Tea", "Håkansson", LocalDate.parse("1968-01-25"), Gender.FEMALE);
-
         Optional<Person> optional = null;
 
-        // todo: write your code here
-
-
+        optional = people.stream().filter(person -> person.getPersonId() == 5436).findAny();
         assertNotNull(optional);
         assertTrue(optional.isPresent());
         assertEquals(expected, optional.get());
@@ -130,6 +132,9 @@ public class StreamExercise {
         Optional<Person> optional = null;
 
         // todo: write your code here
+        optional = people.stream()
+                .min(Comparator.comparing(Person::getDateOfBirth));
+        System.out.println(optional);
 
         assertNotNull(optional);
         assertEquals(expectedBirthDate, optional.get().getDateOfBirth());
