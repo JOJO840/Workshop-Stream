@@ -1,9 +1,12 @@
 package se.lexicon.vxo;
 
 
-public class App 
+import se.lexicon.vxo.model.PersonDto;
+
+public class App
 {
     public static void main( String[] args ) {
+
 
     }
 }

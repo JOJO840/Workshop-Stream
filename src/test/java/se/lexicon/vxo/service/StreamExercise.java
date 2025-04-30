@@ -66,7 +66,6 @@ public class StreamExercise {
         int expectedSize = 4988;
         List<Person> females = null;
 
-        // todo: write your code here
         females = people.stream().filter(person -> person.getGender() == Gender.FEMALE)
                 .collect(Collectors.toList());
 
@@ -99,7 +98,6 @@ public class StreamExercise {
 
         Person[] result = null;
 
-        // todo: write your code here
         result = people.stream()
                 .filter(person -> person.getFirstName().equalsIgnoreCase("erik"))
                 .toArray(Person[]::new);
@@ -131,7 +129,6 @@ public class StreamExercise {
 
         Optional<Person> optional = null;
 
-        // todo: write your code here
         optional = people.stream()
                 .min(Comparator.comparing(Person::getDateOfBirth));
         System.out.println(optional);
@@ -147,10 +144,14 @@ public class StreamExercise {
     public void task9() {
         int expectedSize = 892;
         LocalDate date = LocalDate.parse("1920-01-01");
-
         List<PersonDto> dtoList = null;
 
-        // todo: write your code here
+        dtoList = people.stream()
+                        .filter(person -> person.getDateOfBirth().isBefore(date))
+                .map(person -> new PersonDto(person.getPersonId(), person.getFirstName() + " " + person.getLastName()))
+                        .collect(Collectors.toList());
+
+        System.out.println("dtoList = " + dtoList);
 
 
         assertNotNull(dtoList);
@@ -169,7 +170,13 @@ public class StreamExercise {
 
         Optional<String> optional = null;
 
-        // todo: write your code here
+        optional = people.stream()
+                        .filter(person -> person.getPersonId()==personId)
+                .map(Person::getDateOfBirth)
+                .map(date -> date.getDayOfWeek() + " " + date.getDayOfMonth() + " " + date.getMonth() + " " + date.getYear())
+                .findFirst();
+        System.out.println("optional = " + optional);
+
 
 
         assertNotNull(optional);
@@ -188,7 +195,6 @@ public class StreamExercise {
         double expected = 54.42;
         double averageAge = 0;
 
-        // todo: write your code here
 
         assertTrue(averageAge > 0);
         assertEquals(expected, averageAge, .01);
