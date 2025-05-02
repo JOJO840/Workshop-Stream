@@ -10,6 +10,7 @@ import java.time.Period;
 import java.util.*;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -147,9 +148,9 @@ public class StreamExercise {
         List<PersonDto> dtoList = null;
 
         dtoList = people.stream()
-                        .filter(person -> person.getDateOfBirth().isBefore(date))
+                .filter(person -> person.getDateOfBirth().isBefore(date))
                 .map(person -> new PersonDto(person.getPersonId(), person.getFirstName() + " " + person.getLastName()))
-                        .collect(Collectors.toList());
+                .collect(Collectors.toList());
 
         System.out.println("dtoList = " + dtoList);
 
@@ -171,12 +172,11 @@ public class StreamExercise {
         Optional<String> optional = null;
 
         optional = people.stream()
-                        .filter(person -> person.getPersonId()==personId)
+                .filter(person -> person.getPersonId() == personId)
                 .map(Person::getDateOfBirth)
                 .map(date -> date.getDayOfWeek() + " " + date.getDayOfMonth() + " " + date.getMonth() + " " + date.getYear())
                 .findFirst();
         System.out.println("optional = " + optional);
-
 
 
         assertNotNull(optional);
@@ -190,12 +190,11 @@ public class StreamExercise {
      */
     @Test
     public void task11() {
-        ToIntFunction<Person> personToAge =
-                person -> Period.between(person.getDateOfBirth(), LocalDate.parse("2019-12-20")).getYears();
+        ToIntFunction<Person> personToAge = person -> Period.between(person.getDateOfBirth(), LocalDate.parse("2019-12-20")).getYears();
         double expected = 54.42;
         double averageAge = 0;
-
-
+        averageAge = (double) people.stream().mapToInt(personToAge).sum() / (long) people.size();
+        System.out.println("averageAge = " + averageAge);
         assertTrue(averageAge > 0);
         assertEquals(expected, averageAge, .01);
     }
@@ -206,10 +205,11 @@ public class StreamExercise {
     @Test
     public void task12() {
         String[] expected = {"Ada", "Ana", "Anna", "Ava", "Aya", "Bob", "Ebbe", "Efe", "Eje", "Elle", "Hannah", "Maram", "Natan", "Otto"};
-
         String[] result = null;
-
-        // todo: write your code here
+        result = people.stream().map((p) -> p.getFirstName())
+                .filter(name -> new StringBuilder(name).reverse().toString().equalsIgnoreCase(name))
+                .distinct().sorted().toArray(String[]::new);
+        for (String s : result) System.out.println("s = " + s);
 
         assertNotNull(result);
         assertArrayEquals(expected, result);
@@ -223,7 +223,9 @@ public class StreamExercise {
         int expectedSize = 107;
         Map<String, List<Person>> personMap = null;
 
-        // todo: write your code here
+        personMap = people.stream()
+                .collect(Collectors.groupingBy(Person::getLastName));
+        System.out.println("personMap = " + personMap);
 
         assertNotNull(personMap);
         assertEquals(expectedSize, personMap.size());
@@ -236,7 +238,12 @@ public class StreamExercise {
     public void task14() {
         LocalDate[] _2020_dates = null;
 
-        // todo: write your code here
+        _2020_dates = Stream.iterate(LocalDate.of(2020,1,1), localDate -> localDate.plusDays(1)).limit(366).toArray(LocalDate[]::new);
+
+        for (LocalDate d : _2020_dates) {
+            System.out.println("d = " + d);
+        }
+
 
         assertNotNull(_2020_dates);
         assertEquals(366, _2020_dates.length);
